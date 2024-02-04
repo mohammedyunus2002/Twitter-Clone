@@ -7,6 +7,8 @@ import { format } from "date-fns";
 import Button from "../Button";
 import { BiCalendar } from "react-icons/bi";
 import useEditModal from "@/hooks/useEditModal";
+import useSWR from 'swr';
+import fetcher from '@/libs/fetcher';
 
 interface UserBioProps {
     userId: string;
@@ -23,28 +25,14 @@ interface UserViewProps {
 }
 
 const UserBio = ({ userId }: UserBioProps) => {
-    const [user, setUser] = useState<UserViewProps | null>(null);
-    const [currentUser, setCurrentUser] = useState<UserViewProps | null>(null);
-
+    const { data: user, error: userError } = useSWR(`/api/users/${userId}`, fetcher);
+    const { data: response, error: currentUserError } = useSWR('/api/current', fetcher);
     const editModal = useEditModal();
 
-    useEffect(() => {
-        const fetchData = async () => {
-            const data = await useUser(userId);
-            setUser(data);
-        };
+    const currentUser = response?.currentUser; 
 
-        fetchData();
-    }, [userId]);
-
-    useEffect(() => {
-        const fetchUser = async () => {
-            const userResponse = await useCurrentUser();
-            setCurrentUser(userResponse);
-        };
-
-        fetchUser();
-    }, []);
+    console.log(userId);
+    console.log(currentUser);
 
     const createdAt = useMemo(() => {
         if (!user?.createdAt) {

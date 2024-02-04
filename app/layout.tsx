@@ -7,7 +7,6 @@ import RegisterModal from "@/components/modals/RegisterModal";
 import { Toaster } from "react-hot-toast";
 import { AuthProvider } from "@/providers/SessionWraper";
 import EditModal from "@/components/modals/EditModal";
-import TanStackProvider from "@/providers/TanStackProvider";
 
 
 const inter = Inter({ subsets: ["latin"] });
@@ -29,7 +28,6 @@ export default function RootLayout({
     <html lang="en">
       <body className={inter.className}>
         <AuthProvider>
-          <TanStackProvider>
           <Toaster />
           <EditModal />
           <RegisterModal />
@@ -37,7 +35,6 @@ export default function RootLayout({
           <Layout>
             {children}
           </Layout>
-          </TanStackProvider>
         </AuthProvider>
       </body>
     </html>
