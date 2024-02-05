@@ -1,10 +1,13 @@
+import Form from "@/components/Form";
 import Header from "@/components/Header";
-import Image from "next/image";
+import PostFeed from "@/components/posts/PostFeed";
 
 export default function Home() {
   return (
     <>
-    <Header label="Home" />
+      <Header label="Home" />
+      <Form placeholder="What's happeninig" />
+      <PostFeed  />
     </>
   );
 }

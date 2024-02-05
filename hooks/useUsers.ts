@@ -1,9 +1,17 @@
-export default async function useUsers() {
-  const res = await fetch('http://localhost:3000/api/users');
+"use client"
+import useSWR from 'swr';
 
-  if(!res) {
-    throw new Error("No User")
+import fetcher from '@/libs/fetcher';
+
+const useUsers = () => {
+  const { data, error, isLoading, mutate } = useSWR('/api/users', fetcher);
+
+  return {
+    data,
+    error,
+    isLoading,
+    mutate
   }
+};
 
-  return res.json();
-}
+export default useUsers;

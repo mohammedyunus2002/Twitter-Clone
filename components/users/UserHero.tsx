@@ -1,30 +1,18 @@
 "use client"
 import Image from "next/image";
-import useUser from "@/hooks/useUser";
 import { Avatar } from "../Avatar";
-import { useEffect, useState } from "react";
+import useSWR from "swr";
+import fetcher from "@/libs/fetcher";
 
 interface UserHeroProps {
     userId: string;
 }
 
-interface UserViewProps {
-    coverImage: string;
-  }
-
 export const UserHero =  ({
     userId
 }: UserHeroProps) => {
-    const [user, setUser] = useState<UserViewProps | null>(null);
+    const { data: user } = useSWR(`/api/users/${userId}`, fetcher);
 
-    useEffect(() => {
-        const fetchData = async () => {
-            const data = await useUser(userId);
-            setUser(data);
-        }
-
-        fetchData();
-    }, []);
 
     return ( 
         <div>

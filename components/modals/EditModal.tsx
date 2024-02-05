@@ -1,5 +1,5 @@
 "use client"
-import useCurrentUser from "@/hooks/useCurrentUser";
+
 import useEditModal from "@/hooks/useEditModal";
 import axios from "axios";
 import { useCallback, useEffect, useState } from "react";
@@ -9,18 +9,6 @@ import Input from "../Input";
 import useSWR from 'swr';
 import fetcher from "@/libs/fetcher";
 import ImageUpload from "../ImageUpload";
-
-interface UserViewProps {
-    createdAt: string;
-    id: string;
-    name: string;
-    username: string;
-    bio: string;
-    followingIds: string;
-    followersCount: string;
-    profileImage: string,
-    coverImage: string
-}
 
 const EditModal = () => {
     const {data: response } = useSWR('/api/current', fetcher);

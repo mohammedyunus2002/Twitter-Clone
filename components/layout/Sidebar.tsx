@@ -6,30 +6,34 @@ import SidebarItem from "./SidebarItem";
 import { BiLogOut } from 'react-icons/bi';
 import SidebarTweetButton from './SidebarTweetButton';
 import { signOut, useSession } from "next-auth/react";
+import useSWR from 'swr';
+import fetcher from '@/libs/fetcher';
 
 
-const items = [
-  {
-    icon: BsHouseFill,
-    label: 'Home',
-    href: '/',
-  },
-  {
-    icon: BsBellFill,
-    label: 'Notifications',
-    href: '/notifications',
-    auth: true
-  },
-  {
-    icon: FaUser,
-    label: 'Profile',
-    href: '/users/123',
-    auth: true
-  },
-]
-
-export default  function Sidebar() {
+const Sidebar = () => {
   const { data: session } = useSession();    
+  const {data: response } = useSWR('/api/current', fetcher);
+  const currentUser = response?.currentUser; 
+
+  const items = [
+    {
+      icon: BsHouseFill,
+      label: 'Home',
+      href: '/',
+    },
+    {
+      icon: BsBellFill,
+      label: 'Notifications',
+      href: '/notifications',
+      auth: true
+    },
+    {
+      icon: FaUser,
+      label: 'Profile',
+      href: `/users/${currentUser?.id}`,
+      auth: true
+    },
+  ];
     
     return ( 
         <div className="col-span-1 h-full pr-4 md:pr-6">
@@ -53,3 +57,4 @@ export default  function Sidebar() {
      );
 }
  
+export default Sidebar;

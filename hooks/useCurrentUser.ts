@@ -1,10 +1,20 @@
-export default async function useCurrentUser() {
-    const res = await fetch("http://localhost:3000/api/current");
+"use client"
 
-    if(!res) {
-        throw new Error("No User Logged In");
-    }
-    const data = await res.json();
+import useSWR from 'swr';
 
-    return data.currentUser;
-}
+import fetcher from '@/libs/fetcher';
+
+const useCurrentUser = () => {
+  const { data, error, isLoading, mutate } = useSWR('/api/current', fetcher);
+
+  const currentUser = data?.currentUser; 
+  
+  return {
+    currentUser,
+    error,
+    isLoading,
+    mutate
+  }
+};
+
+export default useCurrentUser;

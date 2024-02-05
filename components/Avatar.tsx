@@ -1,12 +1,11 @@
 "use client"
-import useUser  from "@/hooks/useUser";
-import Image from "next/image";
-import { usePathname, useRouter } from "next/navigation";
-import { useCallback, useEffect, useState } from "react";
 
-interface UserViewProps {
-    profileImage: string;
-  }
+import fetcher from "@/libs/fetcher";
+import Image from "next/image";
+import { useRouter } from "next/navigation";
+import { useCallback } from "react";
+import useSWR from "swr";
+
 
 interface AvatarProps {
     userId: string,
@@ -19,16 +18,8 @@ export const Avatar = ({
     isLarge,
     hasBorder   
 }: AvatarProps) => {
-    const [user, setUser] = useState<UserViewProps | null>(null);
+    const { data: user } = useSWR(`/api/users/${userId}`, fetcher);
 
-    useEffect(() => {
-        const fetchData = async () => {
-            const data = await useUser(userId);
-            setUser(data);
-        }
-
-        fetchData();
-    }, []);
     const router = useRouter();
 
     const onClick= useCallback((event: any) => {

@@ -1,8 +1,6 @@
 "use client"
-// UserBio.tsx
-import useUser from "@/hooks/useUser";
-import useCurrentUser from "@/hooks/useCurrentUser";
-import { useEffect, useMemo, useState } from "react";
+
+import { useMemo } from "react";
 import { format } from "date-fns";
 import Button from "../Button";
 import { BiCalendar } from "react-icons/bi";
@@ -12,16 +10,6 @@ import fetcher from '@/libs/fetcher';
 
 interface UserBioProps {
     userId: string;
-}
-
-interface UserViewProps {
-    createdAt: string;
-    id: string;
-    name: string;
-    username: string;
-    bio: string;
-    followingIds: string;
-    followersCount: string;
 }
 
 const UserBio = ({ userId }: UserBioProps) => {

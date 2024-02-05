@@ -1,8 +1,10 @@
+"use client"
+import useSWR from "swr";
 import { Avatar } from "../Avatar";
-import useUsers from "@/hooks/useUsers";
-const FollowBar = async () => {
+import fetcher from "@/libs/fetcher";
+const FollowBar = () => {
     
-    const users  = await useUsers();
+    const { data: users } = useSWR(`/api/users`, fetcher);
 
     return ( 
         <div className="px-6 py-4 hidden lg:block">
