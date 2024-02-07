@@ -4,14 +4,13 @@ import prisma from "@/libs/prismadb";
 export async function POST(req: Request) {
     try {   
       
-      const response = await req.json();
-      const body = response.body;
+      const body = await req.json();
       const userId = body.userId;
 
       const { currentUser } = await serverAuth();
 
-      if(userId || typeof userId !== 'string') {
-        throw new Error('Invalid ID')
+      if (typeof userId !== 'string') {
+        throw new Error('Invalid or missing userId');
       } 
 
       const user = await prisma.user.findUnique({
@@ -27,6 +26,26 @@ export async function POST(req: Request) {
       let updatedFollowingIds = [...(user.followingIds || [])];
 
       updatedFollowingIds.push(userId);
+
+      try {
+        await prisma.notification.create({
+          data: {
+            body: "Someone followed you",
+            userId
+          }
+        });
+
+        await prisma.user.update({
+          where: {
+            id: userId,
+          },
+          data: {
+            hasNotification: true
+          }
+        });
+    } catch (err) {
+        console.log(err);
+    }
 
       const updatedUser = await prisma.user.update({
         where: {
@@ -52,14 +71,14 @@ export async function POST(req: Request) {
 export async function DELETE(req: Request) {
   try {   
       
-    const response = await req.json();
-    const body = response.body;
+    const body = await req.json();
     const userId = body.userId;
+
 
     const { currentUser } = await serverAuth();
 
-    if(userId || typeof userId !== 'string') {
-      throw new Error('Invalid ID')
+    if (typeof userId !== 'string') {
+      throw new Error('Invalid or missing userId');
     } 
 
     const user = await prisma.user.findUnique({
@@ -74,7 +93,7 @@ export async function DELETE(req: Request) {
 
     let updatedFollowingIds = [...(user.followingIds || [])];
 
-    updatedFollowingIds.filter(followingId => followingId !== userId);
+    updatedFollowingIds = updatedFollowingIds.filter(followingId => followingId !== userId);
 
     const updatedUser = await prisma.user.update({
       where: {

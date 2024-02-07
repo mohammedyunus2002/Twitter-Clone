@@ -6,11 +6,12 @@ import { formatDistanceToNowStrict } from "date-fns"
 import { useRouter } from "next/navigation"
 import { useCallback, useMemo } from "react"
 import { Avatar } from "../Avatar"
-import { AiOutlineHeart, AiOutlineMessage } from "react-icons/ai"
+import { AiFillHeart, AiOutlineHeart, AiOutlineMessage } from "react-icons/ai"
+import useLike from "@/hooks/useLike"
 
 interface PostItemProps {
-    data: Record<string, any>
-    userId?: string
+    data: Record<string, any>;
+    userId?: string;
 
 }
 
@@ -22,21 +23,27 @@ const PostItem = ({
     const loginModal = useLoginModal();
 
     const { currentUser } = useCurrentUser();  
+    const { hasLiked, toggleLike } = useLike({ postId: data.id, userId: userId || '' });
 
     const goToUser = useCallback((event: any) => {
         event.stopPropagation();
-
+    
         router.push(`/users/${data.user.id}`);
     }, [router, data.user.id]);
-
+    
     const goToPost = useCallback(() => {
         router.push(`/posts/${data.id}`);
     }, [router, data.id]);
+    
 
     const onLike = useCallback((event: any) => {
         event.stopPropagation();
 
-        loginModal.onOpen();
+        if(!currentUser) {
+            return loginModal.onOpen();
+        }
+
+        toggleLike();
     }, [loginModal]);
 
     const createdAt = useMemo(() => {
@@ -46,6 +53,8 @@ const PostItem = ({
 
         return formatDistanceToNowStrict(new Date(data.createdAt));
     }, [data?.createdAt]);
+
+    const LikeIcon = hasLiked ? AiFillHeart : AiOutlineHeart
 
     return ( 
         <div 
@@ -122,9 +131,9 @@ const PostItem = ({
                             hover:text-red-500
                           "
                       >
-                          <AiOutlineHeart size={20}  />
+                          <LikeIcon size={20} color={hasLiked ? 'red': ''} />
                           <p>
-                            {data.comments?.length || 0}
+                            {data.likedIds?.length}
                           </p>
                         </div>
                     </div>

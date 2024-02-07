@@ -5,6 +5,7 @@ import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { useCallback } from "react";
 import { IconType } from "react-icons";
+import { BsDot } from "react-icons/bs";
 
 interface SidebarItemProps {
     label: string;
@@ -20,7 +21,8 @@ const SidebarItem = ({
     href, 
     icon: Icon, 
     onClick,
-    auth
+    auth,
+    alert
 }: SidebarItemProps) => {
     const loginModal = useLoginModal();
     const { data: session } = useSession();
@@ -54,6 +56,7 @@ const SidebarItem = ({
                 lg:hidden
             ">
                 <Icon size={28} color="white" />
+                {alert ? <BsDot className="text-sky-500 absolute -top-4 left-0" size={70} /> : null}
             </div>
             <div className="
                 relative    
@@ -71,6 +74,7 @@ const SidebarItem = ({
                 <p className="hidden lg:block text-white text-xl">
                     {label}
                 </p>
+                {alert ? <BsDot className="text-sky-500 absolute -top-4 left-0" size={70} /> : null}
             </div>
         </div>
      );

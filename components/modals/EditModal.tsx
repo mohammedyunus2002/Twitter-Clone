@@ -21,7 +21,7 @@ const EditModal = () => {
     );
     const editModal = useEditModal();
 
-    const [profileImage, setProfileImage] = useState('');
+  const [profileImage, setProfileImage] = useState('');
   const [coverImage, setCoverImage] = useState('');
   const [name, setName] = useState('');
   const [username, setUsername] = useState('');
